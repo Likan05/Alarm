@@ -40,7 +40,7 @@ public class ÑharacterMovement : MonoBehaviour
         EnableAnimation();
         if (value < 0)        
             _spriteRenderer.flipX = true;
-        else
+        else if (value > 0)
             _spriteRenderer.flipX = false;
 
     }

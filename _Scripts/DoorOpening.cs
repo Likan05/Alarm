@@ -9,11 +9,13 @@ public class DoorOpening : MonoBehaviour
 
     private const string Open = nameof(Open);
     private bool _isOpen;
+    private bool _isRunnig;
 
     private void Start()
     {
         _speedOfChangeSound = 0.5f;
-        _audio.volume = 0;          
+        _audio.volume = 0;
+        _isRunnig = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,7 +25,10 @@ public class DoorOpening : MonoBehaviour
         if (_isOpen)
         {            
             _animatorDoor.SetTrigger(Open);
-            StartCoroutine(CoroutineAlarm());
+            if (!_isRunnig)
+            {
+                StartCoroutine(ActivateAlarm());
+            }
             _audio.Play();
         }
     }
@@ -35,12 +40,21 @@ public class DoorOpening : MonoBehaviour
         if (collision.TryGetComponent<ÑharacterMovement>(out ÑharacterMovement player))
         {
             _animatorDoor.SetTrigger(Open);
-            StartCoroutine(CoroutineAlarm());
-        }
+            if (!_isRunnig)
+            {
+                StartCoroutine(ActivateAlarm());
+            }
+        }        
     }
 
-    private IEnumerator CoroutineAlarm()
+    private void Update()
     {
+        Debug.Log(_isRunnig);
+    }
+
+    private IEnumerator ActivateAlarm()
+    {
+        _isRunnig = true;
         byte maxTargetVolume = 1;
         byte minTargetvolume = 0;
 
@@ -61,6 +75,7 @@ public class DoorOpening : MonoBehaviour
         {
             _audio.Stop();
         }
+        _isRunnig = false;
     }
 
     private void ChangeVolume(byte number)
